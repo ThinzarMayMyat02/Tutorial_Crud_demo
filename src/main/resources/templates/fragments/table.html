@@ -1,0 +1,82 @@
+<div th:if="${message != null}" class="alert alert-success alert-dismissible fade 
+text-center message" role="alert">
+[[${message}]]
+<button type="button" class="close btn-sm" data-dismiss="alert" aria-label="Close">
+<span aria-hidden="true">x</span>
+</button>
+</div>
+
+<div th:if="${tutorials.size() > 0 }">
+<table class="table table-hover table-responsive-xl">
+<thead class="thead-light ">
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Title</th>
+        <th scope="col">Description</th>
+        <th scope="col">Level</th>
+        <th scope="col">Published</th>
+        <th scope="col">Actions</th>
+    </tr>
+</thead>
+
+<tbody>
+    <tr th:each="tutorial : ${tutorials}">
+        <th scope="row">[[${tutorial.id}]]</th>
+            <td>[[${tutorial.title}]]</td>
+            <td>[[${tutorial.description}]]</td>
+            <td>[[${tutorial.level}]]</td>
+
+            <td>
+                <a th:if="${tutorial.published == true}"  class="fa-regular fa-square-check"
+                th:href="@{'/tutorials/list/' + ${tutorial.id} + 'published/false'}" title="Disable this Tutorial"></a>
+                <a th:if="${tutorial.published == false}" class="fa-regular fa-square icon-dark"
+                th:href="@{'/tutorials/list/'+ ${tutorial.id} + 'published/true'}"title="Enable this Tutorial"></a>
+            </td>
+
+            <td>
+                <a th:href="@{'/tutorials/list/'+ ${tutorial.id}}" title="Edit this Tutorial" 
+                class="fa-regular fa-pen-to-square icon-dark"></a>
+
+                <a th:href="@{'/tutorials/delete/'+ ${tutorial.id}}" th:tutorialTitle="${tutorial.title}"
+                id="btnDelete" title="Delete this tutorial" class="fa-sharp fa-regular fa-trash-can icon-dark btn-delete"></a>
+            </td>
+
+            <div class="modal-fade text-center" id="confirmModal">
+                <div class="modal-dailog">
+                    <div class="modal-content">
+                        <div class="model-header">
+                            <h5 class="modal-title"> Delete Tutorial Comfirmation</h5>
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span aria-hidden="true">x</span>
+                                </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <span id="comfirmText"></span>
+                        </div>
+
+                        <div class="modal-footer">
+                            <a type="button" id="yesBtn" class="btn btn-danger">Yes</a>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".btn-delete").on("click",function(e){
+            e.preventDefault();
+            link= $(this);
+
+            tutorialTitle = link.attr("tutorialTitle");
+            $("#yesBtn").attr("href",link.attr("href"));
+            $("#comfirmText").html("Do yo want to delete the Tutorial ?");
+            $("confirmModal").modal();
+        });
+    });
+</script>
+    </tr>
+</tbody>
+</table>
+</div>
